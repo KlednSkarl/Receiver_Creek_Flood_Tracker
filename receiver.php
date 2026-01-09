@@ -39,5 +39,11 @@ file_put_contents("data.log", $log, FILE_APPEND);
 // Response to ESP32
 echo json_encode([
     "status" => "success",
-    "message" => "Data received"
+    "message" => "Data received",
+    "device ID" => $deviceId,
+    "temperature" => $temperature,
+    "Humidity" => $humidity
+
+
+
 ]);
