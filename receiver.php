@@ -1,6 +1,38 @@
 <?php
 header("Content-Type: application/json");
 
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $logFile = 'data.log';
+    if (!file_exists($logFile)) {
+        echo json_encode(["error" => "No data available"]);
+        exit;
+    }
+    $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $lastLine = end($lines);
+    if (!$lastLine) {
+        echo json_encode(["error" => "No data available"]);
+        exit;
+    }
+    // Parse log line: "2026-01-26 08:12:23 | ESP32-001 | 28.5 | 67.02"
+    [$datetime, $deviceId, $temperature, $humidity] = preg_split('/\s*\|\s*/', $lastLine);
+    echo json_encode([
+        "device_id" => $deviceId,
+        "temperature" => $temperature,
+        "humidity" => $humidity,
+        "timestamp" => $datetime
+    ]);
+    exit;
+}
+
+
+
+
+
+
+
+
+
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
